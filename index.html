@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internacionalização – PROPESP/UEA (Protótipo)</title>
+<style>
+  :root{
+    /* Paleta institucional UEA */
+    --verde-profundo:#0d4d2b;     /* verde amazônico dominante */
+    --verde:#157a43;
+    --verde-claro:#2da46a;
+    --azul:#0b5e8a;               /* tecnologia/confiança */
+    --ciano:#0a9bbd;              /* desenvolvimento */
+    --turquesa:#1fb5a8;           /* elegância/equilíbrio */
+    --areia:#f4f6f3;
+    --carvao:#1a2520;
+    --cinza:#5d6b63;
+    --branco:#ffffff;
+    --sombra:0 10px 30px rgba(13,77,43,.12);
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Segoe UI',-apple-system,Roboto,Helvetica,sans-serif;
+    color:var(--carvao);background:var(--branco);line-height:1.65;
+  }
+  h1,h2,h3,h4{font-family:Georgia,'Times New Roman',serif;line-height:1.2}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+  /* ===== AVISO PROTÓTIPO ===== */
+  .ribbon{
+    background:repeating-linear-gradient(45deg,#1a2520,#1a2520 12px,#243029 12px,#243029 24px);
+    color:#cfe9d8;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
+    text-align:center;padding:7px 12px;font-weight:600;
+  }
+
+  /* ===== HEADER ===== */
+  header.topo{
+    background:linear-gradient(100deg,var(--verde-profundo),var(--verde) 70%,var(--azul));
+    color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 4px 18px rgba(0,0,0,.18);
+  }
+  .topo .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;gap:18px}
+  .logo{display:flex;align-items:center;gap:11px;flex-shrink:0}
+  .logo .mark{
+    height:50px;display:flex;align-items:center
+  }
+  .logo .mark svg{height:50px;width:auto;display:block}
+  .logo .mark img{height:46px;width:auto;display:block}
+  nav.main{display:flex;gap:1px;align-items:center}
+  nav.main a{
+    font-size:.78rem;padding:8px 9px;border-radius:8px;font-weight:600;
+    opacity:.92;transition:.2s;white-space:nowrap
+  }
+  nav.main a:hover{background:rgba(255,255,255,.16);opacity:1}
+  nav.main a.active{background:rgba(31,181,168,.32);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+  .menu-btn{display:none;background:none;border:1px solid rgba(255,255,255,.4);color:#fff;
+    border-radius:8px;padding:8px 12px;font-size:1.1rem;cursor:pointer}
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative;overflow:hidden;color:#fff;
+    background:
+      radial-gradient(1100px 500px at 78% -10%,rgba(31,181,168,.45),transparent 60%),
+      radial-gradient(900px 600px at 0% 120%,rgba(10,155,189,.4),transparent 55%),
+      linear-gradient(120deg,#063821,#0d4d2b 55%,#0b5e8a);
+  }
+  .hero::after{
+    content:"";position:absolute;inset:0;opacity:.09;
+    background-image:radial-gradient(#fff 1px,transparent 1.4px);background-size:22px 22px;
+  }
+  .hero .wrap{position:relative;z-index:2;padding:80px 24px 90px}
+  .hero .tag{
+    display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);
+    padding:6px 16px;border-radius:30px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
+    font-weight:600;margin-bottom:22px;backdrop-filter:blur(4px)
+  }
+  .hero h1{font-size:clamp(2.2rem,5vw,3.6rem);max-width:16ch;margin-bottom:18px}
+  .hero p{max-width:60ch;font-size:1.12rem;opacity:.93}
+  .hero .cta{margin-top:30px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:30px;
+    font-weight:700;font-size:.92rem;transition:.22s;cursor:pointer;border:none
+  }
+  .btn-p{background:var(--turquesa);color:#04331f}
+  .btn-p:hover{background:#39c9bc;transform:translateY(-2px)}
+  .btn-o{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55)}
+  .btn-o:hover{background:rgba(255,255,255,.13)}
+
+  /* ===== SEÇÕES ===== */
+  section.bloco{padding:78px 0;scroll-margin-top:86px}
+  section.bloco:nth-of-type(even){background:var(--areia)}
+  .eyebrow{
+    color:var(--ciano);font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    font-size:.8rem;margin-bottom:10px;display:flex;align-items:center;gap:10px
+  }
+  .eyebrow::before{content:"";width:30px;height:3px;background:var(--turquesa);border-radius:3px}
+  .bloco h2{font-size:clamp(1.7rem,3.4vw,2.5rem);color:var(--verde-profundo);margin-bottom:18px;max-width:20ch}
+  .lead{font-size:1.05rem;color:var(--cinza);max-width:75ch;margin-bottom:14px}
+
+  /* ===== EQUIPE ===== */
+  .grid-equipe{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;margin-top:36px}
+  .card-membro{
+    background:#fff;border-radius:var(--radius);padding:26px;box-shadow:var(--sombra);
+    border-top:4px solid var(--turquesa);transition:.25s;position:relative;overflow:hidden
+  }
+  .card-membro:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(13,77,43,.2)}
+  .card-membro .role{
+    font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ciano);margin-bottom:6px
+  }
+  .card-membro .avatar{
+    width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--verde),var(--azul));
+    color:#fff;display:grid;place-items:center;font-family:Georgia,serif;font-size:1.3rem;font-weight:700;margin-bottom:14px
+  }
+  .card-membro h4{font-size:1.12rem;color:var(--verde-profundo);margin-bottom:8px}
+  .card-membro p{font-size:.86rem;color:var(--cinza);margin-bottom:14px}
+  .card-membro .links{display:flex;gap:10px;font-size:.78rem;font-weight:600}
+  .card-membro .links a{color:var(--azul);border-bottom:1px solid transparent}
+  .card-membro .links a:hover{border-color:var(--azul)}
+  .badge-presid{border-top-color:var(--verde-profundo)}
+  .badge-presid .avatar{background:linear-gradient(135deg,var(--verde-profundo),var(--turquesa))}
+
+  /* ===== REDES / ACORDOS ===== */
+  .cols-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px;margin-top:36px}
+  .painel{background:#fff;border-radius:var(--radius);padding:30px;box-shadow:var(--sombra)}
+  .painel h3{color:var(--verde-profundo);margin-bottom:16px;font-size:1.3rem;display:flex;align-items:center;gap:12px}
+  .ico{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;flex-shrink:0;
+    background:linear-gradient(135deg,var(--ciano),var(--turquesa));color:#fff;font-size:1.1rem}
+  .lista-rede{list-style:none}
+  .lista-rede li{padding:12px 0;border-bottom:1px solid #e6ece7;display:flex;align-items:center;gap:12px;font-weight:600;color:var(--carvao)}
+  .lista-rede li:last-child{border:none}
+  .lista-rede li .dot{width:9px;height:9px;border-radius:50%;background:var(--turquesa)}
+  .lista-rede li small{font-weight:400;color:var(--cinza);display:block}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .chip{background:var(--areia);border:1px solid #d9e3dc;border-radius:30px;padding:8px 16px;font-size:.85rem;font-weight:600;color:var(--verde)}
+
+  /* ===== UEA EM NÚMEROS ===== */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;margin:36px 0}
+  .stat{
+    background:linear-gradient(135deg,#fff,#f0f6f2);border-radius:var(--radius);padding:26px 20px;text-align:center;
+    box-shadow:var(--sombra);border-bottom:4px solid var(--ciano)
+  }
+  .stat .num{font-family:Georgia,serif;font-size:2.6rem;font-weight:700;color:var(--verde-profundo);line-height:1}
+  .stat .lbl{font-size:.82rem;color:var(--cinza);margin-top:8px;font-weight:600}
+  /* barras continente */
+  .barras{background:#fff;border-radius:var(--radius);padding:30px;box-shadow:var(--sombra)}
+  .barras h3{color:var(--verde-profundo);margin-bottom:6px}
+  .barras .fonte{font-size:.78rem;color:var(--cinza);margin-bottom:22px;font-style:italic}
+  .barra-row{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+  .barra-row .nome{width:150px;font-size:.88rem;font-weight:600;flex-shrink:0}
+  .barra-track{flex:1;background:#eef3ef;border-radius:30px;height:26px;overflow:hidden}
+  .barra-fill{height:100%;border-radius:30px;display:flex;align-items:center;justify-content:flex-end;
+    padding-right:12px;color:#fff;font-size:.78rem;font-weight:700;
+    background:linear-gradient(90deg,var(--verde),var(--ciano));
+    transform-origin:left;transform:scaleX(1)}
+  .barra-fill.anim{transform:scaleX(0);animation:cresce 1.3s cubic-bezier(.2,.8,.2,1) forwards}
+  @keyframes cresce{to{transform:scaleX(1)}}
+
+  /* ===== GLOBAL CLASS / EM CASA ===== */
+  .destaque{
+    background:linear-gradient(120deg,var(--verde-profundo),var(--azul));color:#fff;border-radius:20px;
+    padding:46px;margin-top:36px;position:relative;overflow:hidden
+  }
+  .destaque::before{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;
+    border-radius:50%;background:radial-gradient(circle,rgba(31,181,168,.5),transparent 70%)}
+  .destaque h3{font-size:1.8rem;margin-bottom:14px;position:relative}
+  .destaque p{max-width:65ch;opacity:.95;position:relative}
+
+  /* ===== DOCUMENTOS ===== */
+  .docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:36px}
+  .doc{
+    background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--sombra);
+    display:flex;flex-direction:column;gap:12px;transition:.22s;border-left:4px solid var(--turquesa)
+  }
+  .doc:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(13,77,43,.18)}
+  .doc .ico-doc{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;
+    background:var(--areia);font-size:1.4rem}
+  .doc h4{color:var(--verde-profundo);font-size:1.05rem}
+  .doc p{font-size:.83rem;color:var(--cinza);flex:1}
+  .doc .baixar-wrap{margin-top:4px}
+  .doc .baixar{
+    font-size:.82rem;font-weight:700;color:var(--turquesa);
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 20px;border-radius:8px;align-self:flex-start;
+    background:transparent;border:1.5px solid var(--turquesa);
+    border-radius: 30px;
+    transition:background .2s,color .2s,transform .2s;
+  }
+  .doc .baixar:hover{background:var(--turquesa);color:#fff;transform:translateY(-2px)}
+  .doc .baixar:active{transform:translateY(0)}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--carvao);color:#c5d2ca;padding:50px 0 24px;font-size:.9rem}
+  footer .grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;margin-bottom:30px}
+  footer h5{color:#fff;font-family:Georgia,serif;margin-bottom:14px;font-size:1.05rem}
+  footer a{color:#c5d2ca;display:block;padding:4px 0;transition:.2s}
+  footer a:hover{color:var(--turquesa)}
+  footer .copy{border-top:1px solid #2c3a33;padding-top:18px;text-align:center;font-size:.8rem;opacity:.7}
+
+  @media(max-width:820px){
+    nav.main{display:none;position:absolute;top:72px;left:0;right:0;flex-direction:column;align-items:stretch;
+      background:var(--verde-profundo);padding:14px;gap:2px;box-shadow:0 12px 24px rgba(0,0,0,.25)}
+    nav.main.open{display:flex}
+    nav.main a{font-size:.95rem;padding:12px 14px}
+    .menu-btn{display:block}
+  }
+  @media(max-width:880px){
+    footer .grid{grid-template-columns:1fr}
+    .barra-row .nome{width:100px;font-size:.8rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="ribbon">⚠ Protótipo / rascunho para apresentação interna — conteúdo sujeito a revisão</div>
+
+<header class="topo">
+  <div class="wrap">
+    <a href="#" class="logo" aria-label="PROPESP - Pró-Reitoria de Pesquisa e Pós-Graduação · UEA">
+      <span class="mark">
+        <img src="http://proreitoria.uea.edu.br/propesp/wp-content/uploads/2025/05/propesp01.svg" alt="PROPESP / UEA">
+      </span>
+    </a>
+    <button class="menu-btn" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
+    <nav class="main" id="nav">
+      <a href="#apresentacao" class="active">Apresentação</a>
+      <a href="#equipe">Equipe</a>
+      <a href="#redes">Redes & Acordos</a>
+      <a href="#numeros">UEA em Números</a>
+      <a href="#emcasa">Internacionalização em Casa</a>
+      <a href="#documentos">Documentos</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <span class="tag">Comissão de Internacionalização</span>
+    <h1>Internacionalização da Pós-Graduação na UEA</h1>
+    <p>Planejamento, articulação e fortalecimento da presença global da Universidade do Estado do Amazonas — ampliando cooperações, mobilidade acadêmica e redes de pesquisa internacionais.</p>
+    <div class="cta">
+      <a href="#apresentacao" class="btn btn-p">Conhecer a Comissão →</a>
+      <a href="#documentos" class="btn btn-o">Documentos & Portaria</a>
+    </div>
+  </div>
+</div>
+
+<!-- APRESENTAÇÃO -->
+<section class="bloco" id="apresentacao">
+  <div class="wrap">
+    <div class="eyebrow">Apresentação</div>
+    <h2>Uma comissão para conectar a UEA ao cenário acadêmico global</h2>
+    <p class="lead">A Comissão de Internacionalização da Pós-Graduação é vinculada à Pró-Reitoria de Pesquisa e Pós-Graduação (PROPESP) da Universidade do Estado do Amazonas (UEA) e foi criada por meio da <strong>Portaria nº 027/2025 – CPPG/PROPESP/UEA</strong>, de 08 de outubro de 2025.</p>
+    <p class="lead">Sua competência é coordenar as ações institucionais da Pós-Graduação voltadas à cooperação e ao intercâmbio da UEA com instituições de ensino superior, de pesquisa ou de fomento sediadas em outros países ou com atuação internacional.</p>
+    <p class="lead">Entre suas atribuições destacam-se a elaboração de diretrizes para acordos e cooperações, o incentivo à mobilidade acadêmica de estudantes, docentes e técnicos, a expansão de parcerias com universidades e centros de pesquisa estrangeiros, e a promoção de iniciativas que estimulem a produção científica de alcance global.</p>
+  </div>
+</section>
+
+<!-- EQUIPE -->
+<section class="bloco" id="equipe">
+  <div class="wrap">
+    <div class="eyebrow">Equipe</div>
+    <h2>Quem compõe a Comissão</h2>
+    <p class="lead">Docentes e técnicos responsáveis por articular a estratégia de internacionalização da Pós-Graduação.</p>
+    <div class="grid-equipe">
+
+      <div class="card-membro badge-presid">
+        <div class="role">Presidente da Comissão</div>
+        <div class="avatar">PA</div>
+        <h4>Profa. Dra. Patricia Melchionna Albuquerque</h4>
+        <p>Graduação em Engenharia de Alimentos (UFRGS), mestrado em Engenharia de Alimentos (UFSC) e doutorado em Química (UFSC). Bolsista de produtividade do CNPq e professora titular da UEA.</p>
+        <div class="links"><a href="http://lattes.cnpq.br/1177407730126204">Lattes ↗</a><a href="mailto:palbuquerque77@gmail.com">E-mail ✉</a></div>
+      </div>
+
+      <div class="card-membro badge-presid">
+        <div class="role">Vice-Presidente</div>
+        <div class="avatar">AT</div>
+        <h4>Profa. Dra. Andrea Tarragô</h4>
+        <p>Farmacêutica-bioquímica, especialista em Hematologia Laboratorial, mestrado e doutorado em Imunologia Básica e Aplicada, com pós-doutorado na área. Professora visitante na UEA.</p>
+        <div class="links"><a href="http://lattes.cnpq.br/4644326589690231">Lattes ↗</a><a href="mailto:atarrago@uea.edu.br">E-mail ✉</a></div>
+      </div>
+
+      <div class="card-membro">
+        <div class="role">Membro · Pós-doutoranda</div>
+        <div class="avatar">KC</div>
+        <h4>Profa. Dra. Katia de Abreu Chulata</h4>
+        <p>Doutora em Estudos Linguísticos, Histórico-Literários e Interculturais pela Università del Salento (Itália). Professora na Università G. d'Annunzio (Itália) e pós-doutoranda na UEA.</p>
+        <div class="links"><a href="http://lattes.cnpq.br/0909845582795317">Lattes ↗</a><a href="mailto:katia.deabreu@unich.it">E-mail ✉</a></div>
+      </div>
+
+      <div class="card-membro">
+        <div class="role">Membro · Pós-doutorando</div>
+        <div class="avatar">AO</div>
+        <h4>Prof. Dr. Adriano Teixeira de Oliveira</h4>
+        <p>Graduação em Ciências Biológicas e Medicina Veterinária, mestrado e doutorado em Diversidade Biológica, com pós-doutorado na UFRJ e no IRTA (Espanha). Bolsista CNPq e professor do IFAM.</p>
+        <div class="links"><a href="http://lattes.cnpq.br/9164471794674935">Lattes ↗</a><a href="mailto:atdo.mla25@uea.edu.br">E-mail ✉</a></div>
+      </div>
+
+      <div class="card-membro">
+        <div class="role">Administrativo</div>
+        <div class="avatar">EL</div>
+        <h4>MSc. Elisa Gomes de Lima</h4>
+        <p>Graduação em Ciências Biológicas e mestrado em Educação em Ciências na Amazônia.</p>
+        <div class="links"><a href="http://lattes.cnpq.br/1849528643706885">Lattes ↗</a><a href="mailto:egdl.mca24@uea.edu.br">E-mail ✉</a></div>
+      </div>
+
+      <div class="card-membro">
+        <div class="role">Administrativo</div>
+        <div class="avatar">LA</div>
+        <h4>Lincoln Linhares Pinto Albuquerque</h4>
+        <p>Graduação em Letras.</p>
+        <div class="links"><a href="http://lattes.cnpq.br/2182451597642468">Lattes ↗</a><a href="mailto:#">E-mail ✉</a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- REDES & ACORDOS -->
+<section class="bloco" id="redes">
+  <div class="wrap">
+    <div class="eyebrow">Convênios & Redes</div>
+    <h2>Redes Internacionais e Acordos de Cooperação</h2>
+    <p class="lead">A UEA integra redes e programas internacionais e mantém acordos e cooperações com instituições de diversos países.</p>
+    <div class="cols-2">
+
+      <div class="painel">
+        <h3><span class="ico">🌐</span> Redes Internacionais</h3>
+        <ul class="lista-rede">
+          <li><span class="dot"></span><div>Erasmus+ <small>Programa europeu de mobilidade e cooperação acadêmica</small></div></li>
+          <li><span class="dot"></span><div>GCUB <small>Grupo Coimbra de Universidades Brasileiras</small></div></li>
+          <li><span class="dot"></span><div>CAPES-Global <small>Em parceria com 3 grandes universidades brasileiras</small></div></li>
+        </ul>
+      </div>
+
+      <div class="painel">
+        <h3><span class="ico">🤝</span> Acordos & Instituições Parceiras</h3>
+        <p class="lead" style="margin-bottom:14px">Instituições internacionais com acordos e convênios firmados:</p>
+        <div class="chips">
+          <span class="chip">Embaixada da República Dominicana</span>
+          <span class="chip">EIGSI (França)</span>
+          <span class="chip">+ Cooperações em andamento</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- UEA EM NÚMEROS -->
+<section class="bloco" id="numeros">
+  <div class="wrap">
+    <div class="eyebrow">A UEA em Números</div>
+    <h2>Colaboração científica de alcance multirregional</h2>
+    <p class="lead">Panorama de colaborações em publicações da UEA com instituições no mundo (2015–2024), indicando uma inserção científica em múltiplas regiões.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="num">531</div><div class="lbl">parcerias na Europa</div></div>
+      <div class="stat"><div class="num">331</div><div class="lbl">América do Sul</div></div>
+      <div class="stat"><div class="num">313</div><div class="lbl">Am. do Norte e Central</div></div>
+      <div class="stat"><div class="num">257</div><div class="lbl">Ásia</div></div>
+      <div class="stat"><div class="num">93</div><div class="lbl">África</div></div>
+      <div class="stat"><div class="num">85</div><div class="lbl">Oriente Médio</div></div>
+    </div>
+
+    <div class="barras">
+      <h3>Colaborações por continente</h3>
+      <div class="fonte">Figura 1 — Colaboração mundial de instituições associadas à UEA, 2015–2024. Fonte: SciVal, 2025.</div>
+      <div class="barra-row"><div class="nome">Europa</div><div class="barra-track"><div class="barra-fill" style="width:100%">531</div></div></div>
+      <div class="barra-row"><div class="nome">América do Sul</div><div class="barra-track"><div class="barra-fill" style="width:62%">331</div></div></div>
+      <div class="barra-row"><div class="nome">Am. Norte/Central</div><div class="barra-track"><div class="barra-fill" style="width:59%">313</div></div></div>
+      <div class="barra-row"><div class="nome">Oceania</div><div class="barra-track"><div class="barra-fill" style="width:52%">275*</div></div></div>
+      <div class="barra-row"><div class="nome">Ásia</div><div class="barra-track"><div class="barra-fill" style="width:48%">257</div></div></div>
+      <div class="barra-row"><div class="nome">África</div><div class="barra-track"><div class="barra-fill" style="width:18%">93</div></div></div>
+      <div class="barra-row"><div class="nome">Oriente Médio</div><div class="barra-track"><div class="barra-fill" style="width:16%">85</div></div></div>
+      <p class="fonte" style="margin-top:18px;margin-bottom:0">* Oceania concentrada na Austrália (267). Destaques por país: EUA (244), Inglaterra (74), França (66), Alemanha (65), Espanha (64), Índia (64), Itália (56), China (52).</p>
+    </div>
+  </div>
+</section>
+
+<!-- INTERNACIONALIZAÇÃO EM CASA -->
+<section class="bloco" id="emcasa">
+  <div class="wrap">
+    <div class="eyebrow">Internacionalização em Casa</div>
+    <h2>Conectando o estudante ao mundo, sem fronteiras geográficas</h2>
+    <p class="lead">A internacionalização em casa transpõe as barreiras geográficas entre instituições de ensino superior. O modelo organiza as atividades universitárias por uma perspectiva intercultural, fortalecendo pesquisa, ensino e extensão — sendo a mobilidade dos estudantes opcional. O contato online conecta instituições e pesquisadores de diferentes países.</p>
+
+    <div class="destaque">
+      <h3>🎓 Global Class UEA</h3>
+      <p>Disciplinas oferecidas em outros idiomas (como inglês ou espanhol) dentro do currículo regular, abertas a estudantes brasileiros e de outros países — promovendo a internacionalização diretamente na grade acadêmica.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DOCUMENTOS -->
+<section class="bloco" id="documentos">
+  <div class="wrap">
+    <div class="eyebrow">Documentos</div>
+    <h2>Documentos & Downloads</h2>
+    <p class="lead">Documentos estratégicos e institucionais da internacionalização da UEA.</p>
+    <div class="docs">
+
+      <div class="doc">
+        <div class="ico-doc">📋</div>
+        <h4>Plano de Internacionalização</h4>
+        <p>Documento estratégico que organiza metas, diretrizes, programas e indicadores para ampliar a presença global da universidade.</p>
+        <a class="baixar" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M5 14l7 7 7-7"/><line x1="3" y1="21" x2="21" y2="21"/></svg><span>Baixar PDF</span></a>
+      </div>
+
+      <div class="doc">
+        <div class="ico-doc">📊</div>
+        <h4>Relatório de Internacionalização</h4>
+        <p>Panorama da internacionalização da UEA, com diagnóstico em quatro frentes (indicadores SciVal, dados dos PPGs, redes CAPES-Global e acordos via ARI).</p>
+        <a class="baixar" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M5 14l7 7 7-7"/><line x1="3" y1="21" x2="21" y2="21"/></svg><span>Baixar PDF</span></a>
+      </div>
+
+      <div class="doc">
+        <div class="ico-doc">⚖️</div>
+        <h4>Portaria da Comissão</h4>
+        <p>Portaria nº 027/2025 – CPPG/PROPESP/UEA, que institui a Comissão do Programa de Internacionalização da Pós-Graduação Stricto Sensu.</p>
+        <a class="baixar" href="http://proreitoria.uea.edu.br/propesp/wp-content/uploads/2025/10/PORTARIA-No-027_2025-Comissao-do-Programa-de-Internacionalizacao-da-Pos-Graduacao-Stricto-Sensu-da-UEA_assinado-2.pdf"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M5 14l7 7 7-7"/><line x1="3" y1="21" x2="21" y2="21"/></svg><span>Baixar PDF</span></a>
+      </div>
+
+      <div class="doc">
+        <div class="ico-doc">🧭</div>
+        <h4>Guia do Estudante Estrangeiro</h4>
+        <p>Orientações para estudantes internacionais interessados em ingressar nos programas da UEA.</p>
+        <a class="baixar" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M5 14l7 7 7-7"/><line x1="3" y1="21" x2="21" y2="21"/></svg><span>Baixar PDF</span></a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <h5>PROPESP / UEA</h5>
+        <p style="opacity:.85;max-width:40ch">Comissão de Internacionalização da Pós-Graduação. Av. Djalma Batista, 3578, Flores — Manaus/AM, CEP 69050-010.</p>
+        <p style="margin-top:12px;opacity:.85">Segunda a Sexta, 08:00 às 17:00<br>✉ propesp@uea.edu.br</p>
+      </div>
+      <div>
+        <h5>Navegação</h5>
+        <a href="#apresentacao">Apresentação</a>
+        <a href="#equipe">Equipe</a>
+        <a href="#redes">Redes & Acordos</a>
+        <a href="#numeros">UEA em Números</a>
+        <a href="#documentos">Documentos</a>
+      </div>
+      <div>
+        <h5>Links Úteis</h5>
+        <a href="https://www.uea.edu.br/">Portal da UEA</a>
+        <a href="http://www.capes.gov.br/">CAPES</a>
+        <a href="http://www.cnpq.br/">CNPq</a>
+        <a href="http://lattes.cnpq.br/pl/">Plataforma Lattes</a>
+        <a href="https://erasmus-plus.ec.europa.eu/">Erasmus+</a>
+      </div>
+    </div>
+    <div class="copy">Protótipo de layout — Copyright © 2026 Pró-Reitoria de Pesquisa e Pós-Graduação · CTIC-Central/UEA</div>
+  </div>
+</footer>
+
+<script>
+  // destaca seção ativa no menu
+  const links=[...document.querySelectorAll('nav.main a')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        const i=secs.indexOf(e.target);
+        if(i>=0)links[i].classList.add('active');
+      }
+    });
+  },{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(s=>s&&obs.observe(s));
+  // anima barras quando a seção de números aparece
+  const numSec=document.getElementById('numeros');
+  const fills=[...document.querySelectorAll('.barra-fill')];
+  fills.forEach(f=>{f.dataset.w=f.style.width;f.style.width='0';});
+  const barObs=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){
+      fills.forEach(f=>{f.classList.add('anim');f.style.width=f.dataset.w;});
+      barObs.disconnect();
+    }});
+  },{threshold:.2});
+  if(numSec)barObs.observe(numSec);
+  // fecha menu mobile ao clicar
+  links.forEach(l=>l.addEventListener('click',()=>document.getElementById('nav').classList.remove('open')));
+</script>
+
+</body>
+</html>
